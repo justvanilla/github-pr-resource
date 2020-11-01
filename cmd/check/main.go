@@ -11,11 +11,11 @@ import (
 func main() {
 	var request resource.CheckRequest
 
-	decoder := json.NewDecoder(os.Stdin)
-	decoder.DisallowUnknownFields()
+	reader := bufio.NewReader(os.Stdin)
+	text, _ := reader.ReadString('\n')
 
-	if err := decoder.Decode(&request); err != nil {
-		log.Fatalf("failed to unmarshal request: %s", err)
+	if err := json.Unmarshal([]byte(text), &request); err != nil {
+		log.Fatalf("failed to unmarshal request: %s -> %s", err, text)
 	}
 
 	if err := request.Source.Validate(); err != nil {
